@@ -2,31 +2,31 @@ let baseData = {
   "errno": 0,
   "data": {
     "全国\t": {
-      "flow_before_discount": {
+      "first_column_test": {
         "today": "43,053,578",
         "time": "14:50",
         "yesterday_add": "8.21%",
         "week_add": "-1.28%"
       },
-      "total_order_cnt": {
+      "second_column_test": {
         "today": "996,912",
         "time": "14:50",
         "yesterday_add": "4.49%",
         "week_add": "-4.23%"
       },
-      "total_discount": {
+      "third_column_test": {
         "today": "8,026,947",
         "time": "14:50",
         "yesterday_add": "4.4%",
         "week_add": "-0.55%"
       },
-      "user_cnt_with_order": {
+      "fourth_column_test": {
         "today": "985,848",
         "time": "14:50",
         "yesterday_add": "4.55%",
         "week_add": "-4.16%"
       },
-      "pct_before_discount": {
+      "fifth_column_test": {
         "today": "7,042",
         "time": "14:50",
         "yesterday_add": "-2.54%",

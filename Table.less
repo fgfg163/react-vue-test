@@ -1,16 +1,20 @@
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: #fff;
+}
+
 .table-box {
   position: relative;
   max-height: 100%;
   overflow: auto;
 
   table {
-    thead th, tbody td {
-      text-align: center;
-    }
-  }
+    table-layout: fixed;
+    min-width: 100%;
 
-  table > tbody > tr > td, table > thead > tr > th {
-    width: 130px;
+    > thead > tr, > thead > tr > th {
+      background-color: #fff;
+    }
+
   }
 
   .table-top-left {
@@ -44,7 +48,7 @@
     background-image: url(data:image/gif;base64,AAAA);
   }
 
-  .table-left-top > table, .table-left > table, .table-top > table {
+  .table-left-top table, .table-left table, .table-top table {
     position: absolute;
   }
 
@@ -52,10 +56,6 @@
     .table-left-cell, .table-top-cell, .table-top-left-cell {
       visibility: hidden;
     }
-  }
-
-  .table-top-left, .table-top {
-    height: 100px;
   }
 
   .table-top-left, .table-top, .table-left {
@@ -66,9 +66,10 @@
     }
   }
 
-  .table-top > table {
-    th, td {
+  .table-top table {
+    tbody, tbody > tr, tbody > tr > td {
       visibility: hidden;
+      border: 0;
     }
     .table-top-cell {
       visibility: visible;
@@ -76,10 +77,9 @@
     }
   }
 
-  .table-left > table {
-    th, td {
-      visibility: hidden;
-    }
+  .table-left table {
+    visibility: hidden;
+    border: 0;
 
     .table-left-cell {
       visibility: visible;
@@ -87,9 +87,10 @@
     }
   }
 
-  .table-top-left > table {
-    th, td {
+  .table-top-left table {
+    tbody, tbody > tr, tbody > tr > td {
       visibility: hidden;
+      border: 0;
     }
 
     .table-top-left-cell {
@@ -100,22 +101,26 @@
 
   table > thead > tr > th {
     &.sortable {
-      background-image: url(/static/images/sort.sortable.png?__inline);
       background-repeat: no-repeat;
       background-position: center right;
       cursor: pointer;
     }
     &.sort-asc {
-      background-image: url(/static/images/sort.asc.png?__inline);
       background-repeat: no-repeat;
       background-position: center right;
     }
     &.sort-desc {
-      background-image: url(/static/images/sort.desc.png?__inline);
       background-repeat: no-repeat;
       background-position: center right;
     }
   }
+
+  table > thead > tr, table > tbody > tr {
+    td.sorted {
+      background: rgb(239, 249, 249) !important;
+    }
+  }
+
   table.amt-table-longitudinal-striped > tbody > tr {
     > td:nth-of-type(6n+6), > td:nth-of-type(6n+7), > td:nth-of-type(6n+8) {
       background-color: #fafafa;
@@ -128,18 +133,12 @@
     border-right: 1px solid #ddd;
   }
 
+  table > thead > tr > th > {
+    border-bottom: 1px solid #ddd;
+  }
+
   table > thead {
     white-space: nowrap;
   }
-}
 
-.amt-table-box.full-screen {
-  .table-box {
-    height: auto;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
 }

@@ -7,26 +7,35 @@ class Table extends Component {
     super(props);
     this.onSortableClick = this.onSortableClick.bind(this);
     this.state = {
-      data,
+      data: [],
       columns,
+      freeze: [2, 2],
     }
   }
 
+  componentDidMount() {
+    setTimeout(()=> {
+      this.setState({data: data});
+    }, 1000);
+  }
+
   onSortableClick(e, sortable, field, row) {
-    if (this.props.sorter.field == row.dataIndexPath && this.props.sorter.sort == "desc") {
-      this.props.setSorter({
-        sorter: {
-          field: row.dataIndexPath,
-          sort: "asc",
-        }
-      });
-    } else {
-      this.props.setSorter({
-        sorter: {
-          field: row.dataIndexPath,
-          sort: "desc",
-        }
-      });
+    if (sortable) {
+      if (this.props.sorter.field == row.dataIndexPath && this.props.sorter.sort == "desc") {
+        this.props.setSorter({
+          sorter: {
+            field: row.dataIndexPath,
+            sort: "asc",
+          }
+        });
+      } else {
+        this.props.setSorter({
+          sorter: {
+            field: row.dataIndexPath,
+            sort: "desc",
+          }
+        });
+      }
     }
   }
 
@@ -56,15 +65,34 @@ class Table extends Component {
       }
     }
 
+    // 首行class
+    columns = columns.map((e, index)=> {
+      let newLine = {...e};
+      newLine.className = {
+        "sortable": e.sortable ? true : false,
+        "sorted": e.sortable && e.dataIndexPath == this.props.sorter.field ? true : false,
+        "sort-asc": e.sortable && e.dataIndexPath == this.props.sorter.field && this.props.sorter.sort == "asc" ? true : false,
+        "sort-desc": e.sortable && e.dataIndexPath == this.props.sorter.field && this.props.sorter.sort == "desc" ? true : false,
+        "table-top-left-cell": index < this.state.freeze[1],
+        "table-top-cell": index >= this.state.freeze[1],
+      };
+      newLine.dataClassName = {
+        "sorted": e.sortable && e.dataIndexPath == this.props.sorter.field ? true : false,
+        "table-left-cell": index < this.state.freeze[1],
+      };
+      return newLine;
+    });
+
     return (
       <div>
         <table className="table table-striped table-hover table-condensed">
           <thead>
           <tr>
-            {columns.map(item=> {
+            {columns.map((item, index)=> {
               return (
-                <th key={item.dataIndexPath}
-                    onClick={(e)=>this.onSortableClick(e, item.sortable, item.dataIndex, item)}>{item.title}</th>
+                <th key={item.dataIndexPath} className={classnames(item.className)}
+                    onClick={(e)=>this.onSortableClick(e, item.sortable, item.dataIndexPath, item)}
+                >{item.title}</th>
               );
             })}
           </tr>
@@ -75,7 +103,7 @@ class Table extends Component {
               <tr key={line.key}>
                 {columns.map(col=> {
                   return (
-                    <td key={col.dataIndexPath}>
+                    <td key={col.dataIndexPath} className={classnames(col.dataClassName)}>
                       {line[col.dataIndexPath]}
                     </td>
                   );

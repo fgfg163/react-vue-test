@@ -2,7 +2,9 @@ import React from 'react'
 import {render} from 'react-dom'
 import App from './App'
 
-render(
-  <App />,
-  document.getElementById('reactroot')
-)
+if (document.getElementById("reactroot")) {
+  render(
+    <App />,
+    document.getElementById('reactroot')
+  )
+}

@@ -1,5 +1,6 @@
 import {data, columns} from '../data';
 import vTableBase from './TableBase';
+import classnames from 'classnames';
 export default {
   template: `
 <v-table-base>
@@ -7,17 +8,17 @@ export default {
   <table class="table table-striped table-hover table-condensed">
     <thead>
     <tr>
-      <th track-by="dataIndexPath" v-for="(index, item) in columns"
-           @click="onSortableClick($event,item.sortable,item.dataIndex,item)">
-        {{item.title}}
+      <th track-by="dataIndexPath" v-for="(index, column) in fullColumns"
+           @click="onSortableClick($event,column.sortable,column.dataIndexPath,column)" :class="column.className">
+        {{column.title}}
       </th>
     </tr>
     </thead>
     <tbody>
     <tr track-by="key" v-for="lineData in dataShow">
       {{lineData}}
-      <td track-by="dataIndexPath" v-for="(index, column) in columns">
-        {{lineData[column.dataIndexPath]}}
+      <td track-by="dataIndexPath" v-for="(index, column) in fullColumns" :class="column.dataClassName">
+        {{lineData[column.dataIndexPath]}}        
       </td>
     </tr>
     </tbody>
@@ -26,8 +27,9 @@ export default {
 `,
   data() {
     return {
-      data: data,
+      data: [],
       columns: columns,
+      freeze: [2, 2],
     }
   },
   props: {
@@ -60,19 +62,43 @@ export default {
       }
       return dataSource;
     },
+    fullColumns(){
+      let newCol = this.columns.map((e, index)=> {
+        let newLine = {...e};
+        newLine.className = classnames({
+          "sortable": e.sortable ? true : false,
+          "sorted": e.sortable && e.dataIndexPath == this.sorter.field ? true : false,
+          "sort-asc": e.sortable && e.dataIndexPath == this.sorter.field && this.sorter.sort == "asc" ? true : false,
+          "sort-desc": e.sortable && e.dataIndexPath == this.sorter.field && this.sorter.sort == "desc" ? true : false,
+          "table-top-left-cell": index < this.freeze[1],
+          "table-top-cell": index >= this.freeze[1],
+        });
+        newLine.dataClassName = classnames({
+          "sorted": e.sortable && e.dataIndexPath == this.sorter.field ? true : false,
+          "table-left-cell": index < this.freeze[1],
+        });
+        return newLine;
+      });
+      console.log(newCol);
+      return newCol;
+    },
+
   },
   methods: {
     onSortableClick(e, sortable, field, row){
-      if (this.sorter.field == row.dataIndexPath && this.sorter.sort == "desc") {
-        this.sorter = {
-          field: row.dataIndexPath,
-          sort: "asc",
-        };
-      } else {
-        this.sorter = {
-          field: row.dataIndexPath,
-          sort: "desc",
-        };
+      console.log(field);
+      if (sortable) {
+        if (this.sorter.field == row.dataIndexPath && this.sorter.sort == "desc") {
+          this.sorter = {
+            field: row.dataIndexPath,
+            sort: "asc",
+          };
+        } else {
+          this.sorter = {
+            field: row.dataIndexPath,
+            sort: "desc",
+          };
+        }
       }
     },
   },
@@ -80,6 +106,8 @@ export default {
     vTableBase,
   },
   ready(){
-
+    setTimeout(()=> {
+      this.data = data;
+    }, 1000);
   },
 }
